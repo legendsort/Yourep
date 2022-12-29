@@ -1,86 +1,56 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
-
+import type { NextPage } from 'next';
+import Link from 'next/link';
+import DownloadButton from '../components/DownloadButton';
+import { data } from '../data/data';
 const Home: NextPage = () => {
+  const { media, igcode } = data;
+  const getMediaUrl = (item: any) => {
+    return item.media_type == 1 ? item.display_url : item.video_url;
+  };
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center py-2">
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+    <div className='flex min-h-screen flex-col items-center justify-center py-2'>
+      {media.map((item: any, idx: number) => (
+        <div
+          key={idx}
+          className='relative my-2 w-full bg-black bg-opacity-50 rounded-md bg-cover bg-center'>
+          <img
+            src={item.display_url}
+            alt={item.igcode + '-' + idx}
+            className='blur-lg opacity-80 p-5 absolute inset-0 -z-10 rounded-md w-full h-full mx-auto shadow-md'
+          />
 
-      <main className="flex w-full flex-1 flex-col items-center justify-center px-20 text-center">
-        <h1 className="text-6xl font-bold">
-          Welcome to{' '}
-          <a className="text-blue-600" href="https://nextjs.org">
-            Next.js!
-          </a>
-        </h1>
+          <Link href={getMediaUrl(item)} as={getMediaUrl(item)} target='_blank'>
+            <div className='relative'>
+              <img
+                alt={item.igcode + '-' + idx}
+                src={item.display_url}
+                className='h-72 sm:h-96 mx-auto shadow-md rounded-t-md sm:rounded-none'
+              />
 
-        <p className="mt-3 text-2xl">
-          Get started by editing{' '}
-          <code className="rounded-md bg-gray-100 p-3 font-mono text-lg">
-            pages/index.tsx
-          </code>
-        </p>
+              {item.media_type == 2 && (
+                <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    fill='none'
+                    viewBox='0 0 24 24'
+                    strokeWidth={1.5}
+                    stroke='currentColor'
+                    className='w-16 h-16 bg-black rounded-full p-2 opacity-60'>
+                    <path
+                      strokeLinecap='round'
+                      d='M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z'
+                    />
+                  </svg>
+                </div>
+              )}
+            </div>
+          </Link>
 
-        <div className="mt-6 flex max-w-4xl flex-wrap items-center justify-around sm:w-full">
-          <a
-            href="https://nextjs.org/docs"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Documentation &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Find in-depth information about Next.js features and its API.
-            </p>
-          </a>
-
-          <a
-            href="https://nextjs.org/learn"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Learn &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Learn about Next.js in an interactive course with quizzes!
-            </p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Examples &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Discover and deploy boilerplate example Next.js projects.
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Deploy &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+          <DownloadButton item={item} idx={idx} igcode={igcode} />
         </div>
-      </main>
-
-      <footer className="flex h-24 w-full items-center justify-center border-t">
-        <a
-          className="flex items-center justify-center gap-2"
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-        </a>
-      </footer>
+      ))}
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
