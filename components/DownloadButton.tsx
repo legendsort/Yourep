@@ -9,6 +9,22 @@ export default function DownloadButton({
   idx: number;
   igcode: string;
 }) {
+  const forceDownload = (url: string, fileName: string) => {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.responseType = 'blob';
+    xhr.onload = function () {
+      var urlCreator = window.URL || window.webkitURL;
+      var imageUrl = urlCreator.createObjectURL(this.response);
+      var tag = document.createElement('a');
+      tag.href = imageUrl;
+      tag.download = fileName;
+      document.body.appendChild(tag);
+      tag.click();
+      document.body.removeChild(tag);
+    };
+    xhr.send();
+  };
   return (
     <div>
       <button
@@ -16,9 +32,11 @@ export default function DownloadButton({
         type='submit'
         onClick={async () => {
           if (item.media_type == 1) {
-            window.open(item.display_url, '_blank');
+            forceDownload(item.display_url, '1.jpg');
+            // window.open(item.display_url, '_blank');
           } else if (item.media_type == 2) {
-            window.open(item.video_url, '_blank');
+            forceDownload(item.video_url, 'sample.mp4');
+            // window.open(item.video_url, '_blank');
           }
         }}>
         {item.media_type == 1 ? (
