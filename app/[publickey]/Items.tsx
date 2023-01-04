@@ -29,13 +29,13 @@ export default async function Index({ publickey }: { publickey: any }) {
 
       <div className='flex-cols items-center justify-center'>
         <div className='grid grid-cols-2 gap-y-10 gap-x-6 md:grid-cols-4'>
-          {data.map((item: any) => (
+          {data.map((item: any, idx: number) => (
             <a key={item.id} href={`/download/${item.id}`} className='group'>
               <div className='aspect-w-2 aspect-h-3 w-full overflow-hidden rounded-lg sm:aspect-w-2 sm:aspect-h-3 ransition-all duration-200 hover:shadow hover:-translate-y-1'>
                 <Image
                   width={200}
                   height={200}
-                  src={item.media[0].display_url}
+                  src={`https://picsum.photos/id/${idx}/200/300`}
                   alt={'media-' + item.igcode}
                   className='w-full h-full object-cover object-center group-hover:opacity-75 transition-all ease-in-out duration-300'
                 />
