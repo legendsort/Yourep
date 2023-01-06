@@ -1,10 +1,11 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 import Image from 'next/image';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { supabase } from '../utils/supabaseServer';
 export const revalidate = 10;
+const first = 8;
 
 async function getData(publickey: string, st = 0, ed = revalidate - 1) {
   const { data, error } = await supabase
@@ -12,7 +13,7 @@ async function getData(publickey: string, st = 0, ed = revalidate - 1) {
     .select()
     .eq('publickey', publickey)
     .order('inserted_at', { ascending: false })
-    .range(st, ed);
+    .range(st+first, ed+first);
 
   return data;
 }
@@ -22,11 +23,6 @@ const ClientItems = ({ publickey }: any) => {
   const [data, setData] = useState([]);
   const [hasMore, setHasMore] = useState(true);
 
-  useEffect(() => {
-    getData(publickey).then((res: any) => {
-      setData(res);
-    });
-  }, [publickey]);
   const fetchMore = async () => {
     const len = data.length;
     const res: any = await getData(publickey, len, len+revalidate-1);
@@ -35,7 +31,6 @@ const ClientItems = ({ publickey }: any) => {
       return ;
     }
     const newData = data.concat(res);
-    console.log(newData.length);
     setData(newData);
   }
   
@@ -44,19 +39,9 @@ const ClientItems = ({ publickey }: any) => {
       dataLength={data.length}
       next={fetchMore}
       hasMore={hasMore}
-      loader={<h3> Loading...</h3>}
+      loader={<h3> </h3>}
     >
 
-        {data.length == 0 && (
-          <div className='mt-24 flex-col justify-center items-center'>
-            <h1 className='text-gray-500 text-center'>No activity yet</h1>
-            <a href='/'>
-              <div className='mt-2 flex w-full sm:w-36 mx-auto btn btn-primary'>
-                Start
-              </div>
-            </a>
-          </div>
-        )}
 
       <div className='flex-cols items-center justify-center'>
         <div className='grid grid-cols-2 gap-y-10 gap-x-6 md:grid-cols-4'>
